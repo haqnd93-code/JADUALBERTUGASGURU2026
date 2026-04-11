@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Jadual Guru SMK Seri Rompin</title>
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+      // Konfigurasi dari firebase.html anda yang terkini
+      const firebaseConfig = {
+        apiKey: "AIzaSyAYotM4dm_ibmlOIrUGGktQ9pzi91yLD14",
+        authDomain: "jadual-guru-serin-e9152.firebaseapp.com",
+        projectId: "jadual-guru-serin-e9152",
+        storageBucket: "jadual-guru-serin-e9152.firebasestorage.app",
+        messagingSenderId: "701787734283",
+        appId: "1:701787734283:web:4d26040a254c79bc9aa20e",
+        measurementId: "G-EYGQ4SKTHQ"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Eksport ke window supaya boleh dipanggil oleh fungsi HTML biasa
+      window.db = db;
+      window.doc = doc;
+      window.setDoc = setDoc;
+      window.onSnapshot = onSnapshot;
+
+      console.log("Firebase & Firestore berjaya dihubungkan.");
+    </script>
+
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --blue: #2980b9; --bg: #f4f7f6; --save: #e67e22; --lock: #c0392b; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); padding: 10px; font-size: 11px; color: #333; margin: 0; }
+        
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?q=80&w=1920') no-repeat center center fixed;
+            background-size: cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .login-header { color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); margin-bottom: 20px; text-align: center; font-size: 28px; font-weight: bold; letter-spacing: 2px; }
+        .login-box { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); width: 320px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); position: relative; }
+        .login-box h2 { margin-top: 0; margin-bottom: 20px; color: var(--primary); font-size: 18px; border-bottom: 2px solid var(--blue); padding-bottom: 10px; }
+        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .btn-login { width: 100%; padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; margin-top: 10px; }
+        .copyright-tag { margin-top: 25px; color: #555; font-size: 10px; letter-spacing: 1px; font-weight: bold; }
+
+        #mainApp { display: none; }
+        .container { background: white; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 1300px; margin: auto; border: 1px solid #ddd; position: relative; }
+        .admin-panel { background: #ebedef; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 15px; border: 2px solid var(--primary); }
+        .config-box { background: white; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: flex; flex-direction: column; }
+        .group-btns { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+        textarea { width: 100%; height: 60px; font-size: 11px; margin-top: 5px; border: 1px solid #bdc3c7; border-radius: 4px; padding: 6px; resize: none; box-sizing: border-box; }
+        select, input[type="date"] { padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; width: 100%; font-weight: bold; font-size: 12px; background: #fff; margin-bottom: 5px; }
+        .btn { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; font-size: 11px; }
+        .btn-kump { background: #95a5a6; }
+        .btn-kump.active { background: var(--blue); transform: scale(1.05); border: 1px solid #000; }
+        .btn-save { background: var(--save); margin-top: 5px; }
+        .btn-jana { background: var(--accent); width: 100%; padding: 12px; font-size: 13px; margin-top: 10px; }
+        
+        table.jadual-main { width: 100%; border-collapse: collapse; margin-top: 15px; border: 2px solid black; background: white; font-size: 10px; }
+        table.jadual-main th, table.jadual-main td { border: 1px solid black; padding: 8px 4px; text-align: center; vertical-align: middle; }
+        table.jadual-main th { background: #f2f2f2; height: 40px; }
+        .hari-col { font-weight: bold; background: #f9f9f9; width: 80px; }
+        
+        .lencana-img { width: 100px; height: 100px; object-fit: contain; }
+        .info-bar { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid black; padding-bottom: 8px; margin-bottom: 10px; font-size: 11px; }
+
+        @media print { 
+            .admin-panel, .no-print, #loginOverlay { display: none !important; } 
+            .container { border: none; box-shadow: none; padding: 0; width: 100%; } 
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginOverlay">
+    <div class="login-header">JADUAL BERTUGAS GURU SERIN</div>
+    <div class="login-box">
+        <h2>SILA LOG MASUK</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button class="btn-login" onclick="checkLogin()">MASUK KE SISTEM</button>
+        <p id="loginError" style="color:#c0392b; font-size:11px; margin-top:15px; display:none; font-weight:bold;">Akses Ditolak: Maklumat Salah!</p>
+        <div class="copyright-tag">hakciptaserin</div>
+    </div>
+</div>
+
+<div id="mainApp">
+    <div class="container">
+        <div class="admin-panel no-print">
+            <div class="config-box">
+                <strong>1. Pengurusan Nama Guru</strong>
+                <div class="group-btns">
+                    <button class="btn btn-kump" onclick="tukarKumpulan('A')">A</button>
+                    <button class="btn btn-kump" onclick="tukarKumpulan('B')">B</button>
+                    <button class="btn btn-kump" onclick="tukarKumpulan('C')">C</button>
+                    <button class="btn btn-kump" onclick="tukarKumpulan('D')">D</button>
+                    <button class="btn btn-kump" onclick="tukarKumpulan('E')">E</button>
+                </div>
+                <textarea id="inputGuru" placeholder="Nama1, Nama2, Nama3..." oninput="kemaskiniSenaraiPilihan()"></textarea>
+                <button class="btn btn-save" onclick="simpanDataGuru()">💾 SIMPAN NAMA (CLOUD)</button>
+            </div>
+            <div class="config-box">
+                <strong>2. Jadual & Tarikh</strong>
+                <select id="selectMinggu" onchange="updateInfoPaparan()">
+                    <script>for(let i=1; i<=45; i++) document.write(`<option value="${i}">Minggu ${i}</option>`);</script>
+                </select>
+                <input type="date" id="inputDate" onchange="updateInfoPaparan()">
+                <button class="btn btn-jana" onclick="janaJadual()">🌀 JANA JADUAL RAWAK</button>
+            </div>
+            <div class="config-box">
+                <strong>3. Kawalan</strong>
+                <textarea id="inputCuti" placeholder="Pengecualian (Cth: ALI-ISNIN)"></textarea>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <button class="btn no-print" style="background:#34495e; flex:1;" onclick="window.focus(); window.print();">🖨️ CETAK</button>
+                    <button class="btn no-print" style="background:#7f8c8d; flex:1;" onclick="location.reload()">🔒 LOG KELUAR</button>
+                </div>
+            </div>
+        </div>
+
+        <table style="width: 100%; border: none; margin-bottom: 15px;">
+            <tr>
+                <td style="width:110px;">
+                    <img src="https://scontent.fkul8-5.fna.fbcdn.net/v/t39.30808-6/638518389_25902767369385956_1881996554074073172_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=7b2446&_nc_ohc=UOkN7bnurhkQ7kNvwGn1b79&_nc_oc=Adminanna1EzuVwWHKRwDj672aMlOe18OoR06HUWt9bDONgIFLott2CXkKOwwhu15Cjs6lxqGUha4PE4EPJn_y9M&_nc_zt=23&_nc_ht=scontent.fkul8-5.fna&_nc_gid=tAnABlyotc3v8uEGQLZt_Q&_nc_ss=8&oh=00_AfumbSKEwzuwO9MrEe_Voa0C8v1tyc0y7BbyVUpIyUfR5g&oe=69A96DE9" class="lencana-img">
+                </td>
+                <td style="text-align: center;">
+                    <div style="font-size: 18px; font-weight: bold; text-decoration: underline;">BORANG PERINCIAN GURU BERTUGAS MINGGUAN 2026</div>
+                    <div style="font-size: 15px; font-weight: bold; margin-top: 5px;">SMK SERI ROMPIN</div>
+                </td>
+                <td style="width:110px;"></td>
+            </tr>
+        </table>
+
+        <div class="info-bar">
+            <div><strong>KUMPULAN: <span id="dispKumpLabel">E</span></strong></div>
+            <div style="text-align: right;">
+                <strong style="font-size: 14px;">MINGGU: <span id="dispMinggu">1</span></strong> | 
+                <strong>TARIKH: <span id="dispTarikh">-</span></strong>
+            </div>
+        </div>
+
+        <table class="jadual-main">
+            <thead>
+                <tr>
+                    <th class="hari-col">HARI</th>
+                    <th>GURU PENYAYANG/PINTU PAGAR</th><th>KESELAMATAN</th><th>PERHIMPUNAN/MATHURAT/YASIN</th>
+                    <th>BUKU LAPORAN</th><th>PANTAU PERGERAKKAN TANDAS/KELAS</th><th>KAWALAN KELAS/KANTIN</th>
+                    <th>KEBAJIKAN/PELAJAR SAKIT</th><th>GURU RELIEF</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <div id="infoLaporan" style="margin-top: 20px; font-size: 12px; display:none;">
+            Guru yang bertugas membaca laporan perhimpunan pada isnin minggu hadapan 
+            (<b><span id="tarikhLaporan">-</span></b>) ialah 
+            <select id="selectGuruLaporan" style="font-weight:bold; border:1px solid #ccc;"></select>.
+        </div>
+
+        <div style="margin-top: 30px; display: flex; justify-content: space-around; text-align: center; font-size: 11px; font-weight: bold;">
+            <div>Disediakan oleh:<br><br><br><br>____________________<br>(Ketua Kumpulan)</div>
+            <div>Disahkan oleh:<br><br><br><br>____________________<br>(Pentadbir)</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const AUTH = { user: "Serin", pass: "12345" };
+    const DATA_AWAL = {
+        'A': "NORADAWIYAH BINTI SUPANDI, TALHAH BIN ENDUT, ZAWAWI BIN TEHERAN, MUHAMMAD HANIS BIN SAKFIEE, NOOR ASHIKIN BT KAMARUDDIN, WAN AMIZA BT W. ABDULLAH, SITI NORIDAYU BT MOHD DERIS, PN. AZLINA BINTI A.AZIZ, NORASIKIN BT MOHAMAD NOOR",
+        'B': "NOOR AZNIZA BINTI AZAHARI, BASHIRUDIN BIN ABD RAHIM, MOHD USRA BIN MD YUSOP, MOHAMAD FADZLI BIN RASLI, NIK FATIN FARAFISHA BINTI MOHD ZAMRI, NORFAZILAH BINTI ARIFIN, LILY NORSA'ADAH BINTI BASIR@BASRI, NOR SHARIZA BINTI MOHD ADNAM",
+        'C': "NORAINI JAAFAR, MUHD SABRI B KADZIM, CHE MOHD RIZUAN B CHE TAIB, AMIRUL ARSYAD BIN MOHD, IEMA SOFEA BT KAMARUL ARIFIN, NORLILI BT ZULKIPLE, MARDIYYAH BT MOHD, SAKINAH BT ABD KOIYOM, NURHAFIZAH BT SIMAON",
+        'D': "NURDIANA ATHIRAH BINTI MOHD KHAIRUDDIN, PAUZI BIN AWANG, MOHD ZUHAIMI BIN AWANG, RAJA MOHD FATHYIE BIN RAJA IBRAHIM, MOHD ARSYAD BIN TIIS, FAIZAH BT RAKIB, NOR AFIDAH BINTI OTHMAN, SHEE FOO LING, AFFIDAYATUL AIDA BINTI LATEH",
+        'E': "MOHAMAD NASRULHAQ RAZALI, BUSTAMI BIN AHMAD, MOHD ZULHILMI B ZULKIFLI, BAHARUDIN BIN ALIAS, ROSLINA BT ALLI, CHE WAN JOHANA BT CHE WAN JOHAR, WAN NOR IZZATI BT WAN MOHD BASHAR, AZMA HANIM BT ABD AZIZ, HAFSAH BT ABU BAKAR, SHARIFAH AMIRAH"
+    };
+
+    let kumpulanAktif = 'E';
+    let unsubListener = null;
+
+    function checkLogin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        if(u === AUTH.user && p === AUTH.pass) {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        } else { document.getElementById('loginError').style.display = 'block'; }
+    }
+
+    // FUNGSI PUSH: Simpan data ke Firestore
+    async function simpanDataGuru() {
+        const val = document.getElementById('inputGuru').value;
+        if(!window.db) { alert("Firebase belum bersedia."); return; }
+        
+        try {
+            await window.setDoc(window.doc(window.db, "kumpulan_guru", kumpulanAktif), {
+                nama_guru: val,
+                lastUpdated: new Date()
+            });
+            alert('Data ' + kumpulanAktif + ' berjaya disimpan ke Cloud!');
+        } catch (e) {
+            console.error("Ralat simpan data: ", e);
+            alert("Ralat Cloud: Sila pastikan Firestore Rules telah diaktifkan.");
+        }
+    }
+
+    // FUNGSI FETCH: Dengar perubahan data secara masa nyata
+    function aktifkanPenyelarasan(k) {
+        if(unsubListener) unsubListener(); // Berhenti dengar kumpulan lama
+
+        if(!window.db) return;
+
+        unsubListener = window.onSnapshot(window.doc(window.db, "kumpulan_guru", k), (snapshot) => {
+            if (snapshot.exists()) {
+                const cloudData = snapshot.data().nama_guru;
+                document.getElementById('inputGuru').value = cloudData;
+                kemaskiniSenaraiPilihan();
+            } else {
+                // Jika tiada di cloud, guna data awal
+                document.getElementById('inputGuru').value = DATA_AWAL[k] || "";
+                kemaskiniSenaraiPilihan();
+            }
+        });
+    }
+
+    function updateInfoPaparan() {
+        const d = document.getElementById('inputDate').value;
+        document.getElementById('dispMinggu').innerText = document.getElementById('selectMinggu').value;
+        if(d) {
+            let sD = new Date(d);
+            let day = sD.getDay();
+            let diff = sD.getDate() - day + (day === 0 ? -6 : 1);
+            let mon = new Date(sD.setDate(diff));
+            let fri = new Date(mon); fri.setDate(mon.getDate() + 4);
+            const mths = ["JANUARI", "FEBRUARI", "MAC", "APRIL", "MEI", "JUN", "JULAI", "OGOS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DISEMBER"];
+            document.getElementById('dispTarikh').innerText = `${mon.getDate()} - ${fri.getDate()} ${mths[fri.getMonth()]} 2026`;
+            
+            let nextMon = new Date(mon);
+            nextMon.setDate(mon.getDate() + 7);
+            document.getElementById('tarikhLaporan').innerText = `${nextMon.getDate()} ${mths[nextMon.getMonth()]} ${nextMon.getFullYear()}`;
+        }
+    }
+
+    function kemaskiniSenaraiPilihan() {
+        const input = document.getElementById('inputGuru').value;
+        const senarai = input.split(',').map(s => s.trim()).filter(s => s !== "");
+        const select = document.getElementById('selectGuruLaporan');
+        const currentVal = select.value;
+        
+        select.innerHTML = '<option value="">- Sila Pilih Guru -</option>';
+        senarai.forEach(nama => {
+            let opt = document.createElement('option');
+            opt.value = nama.toUpperCase();
+            opt.innerText = nama.toUpperCase();
+            select.appendChild(opt);
+        });
+        if(senarai.map(n => n.toUpperCase()).includes(currentVal)) select.value = currentVal;
+    }
+
+    function tukarKumpulan(k) {
+        kumpulanAktif = k;
+        document.querySelectorAll('.btn-kump').forEach(b => b.classList.toggle('active', b.innerText === k));
+        document.getElementById('dispKumpLabel').innerText = k;
+        
+        // Mulakan pengambilan data dari Cloud
+        aktifkanPenyelarasan(k);
+    }
+
+    function janaJadual() {
+        const list = document.getElementById('inputGuru').value.split(',').map(s => s.trim()).filter(s => s !== "");
+        const cutiLines = document.getElementById('inputCuti').value.toUpperCase().split('\n').filter(s => s.includes('-'));
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        if(list.length < 8) { alert("Sila isi sekurang-kurangnya 8 nama guru."); return; }
+
+        const hariArr = ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
+        document.getElementById('infoLaporan').style.display = 'block';
+
+        hariArr.forEach((h) => {
+            let tersedia = list.filter(nama => !cutiLines.some(line => {
+                let [cNama, cHari] = line.split('-').map(x => x.trim().toUpperCase());
+                return nama.toUpperCase().includes(cNama) && h === cHari;
+            }));
+            let shf = tersedia.sort(() => 0.5 - Math.random());
+            tbody.innerHTML += `<tr>
+                <td class="hari-col">${h}</td>
+                <td contenteditable="true">${shf[0]||'-'}</td><td contenteditable="true">${shf[1]||'-'}</td>
+                <td contenteditable="true">${shf[2]||'-'}</td><td contenteditable="true">${shf[3]||'-'}</td>
+                <td contenteditable="true">${shf[4]||'-'}</td><td contenteditable="true">${shf[5]||'-'}</td>
+                <td contenteditable="true">${shf[6]||'-'}</td><td contenteditable="true">${shf[7]||'-'}</td>
+            </tr>`;
+        });
+    }
+
+    window.onload = () => {
+        document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
+        
+        // Beri masa Firebase bersedia
+        setTimeout(() => {
+            tukarKumpulan('E');
+            updateInfoPaparan();
+        }, 1500);
+    };
+</script>
+</body>
+</html>
