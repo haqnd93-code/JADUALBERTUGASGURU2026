@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" id="vp" content="width=device-width, initial-scale=1">
     <title>Sistem Jadual Guru SMK Seri Rompin</title>
     
     <script type="module">
@@ -82,6 +82,9 @@
         table.absen tr.ada-absen td { background:#fdecea; }
         .sel-cuti { background:#f2f2f2; font-weight:bold; letter-spacing:3px; color:#777; }
         .hint-geser { display: none; }
+        .mod-paparan { position: fixed; right: 12px; bottom: 12px; z-index: 1100; display: flex; gap: 2px; padding: 4px; background: rgba(20,25,70,.6); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+        .mod-paparan button { border: none; background: transparent; color: #fff; padding: 8px 12px; border-radius: 999px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .mod-paparan button.aktif { background: rgba(255,255,255,.32); }
         /* ===== TEMA KACA (skrin sahaja - cetakan/PDF tidak berubah) ===== */
         @media screen {
             body { background: linear-gradient(135deg, #1b2a6b 0%, #3a2a8c 45%, #7b2d8e 100%) fixed; min-height: 100vh; }
@@ -138,29 +141,30 @@
             .copyright-tag { color: rgba(255,255,255,.8); }
         }
 
-        @media screen and (max-width: 760px) {
-            body { padding: 6px; font-size: 13px; }
-            .admin-panel { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
-            .config-box[style*="grid-column"] { grid-column: auto !important; }
-            textarea { height: 100px; font-size: 14px; }
-            select, input[type="date"], input[type="file"] { font-size: 16px; padding: 10px; }
-            .btn { padding: 12px; font-size: 13px; }
-            .btn-kump { flex: 1; }
-            .hari-chk label { padding: 9px 11px; font-size: 12px; }
-            .hari-chk input, table.absen input { width: 20px; height: 20px; }
-            table.absen { font-size: 12px; }
-            table.absen td { padding: 7px 3px; }
-            table.absen td.nm { max-width: 120px; }
-            .absen-wrap { max-height: 280px; }
-            .hint-geser { display: block; margin-top: 14px; padding: 8px 12px; text-align: center; font-size: 12px; font-weight: bold; color: #fff; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-            #kertasWrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 14px; }
-            #kertas { min-width: 980px; margin-top: 0; }
-            #loginOverlay { overflow: auto; }
-            .login-header { font-size: 20px; padding: 0 12px; }
-            .login-box { width: 88%; max-width: 340px; padding: 24px; box-sizing: border-box; }
-            .login-box input { font-size: 16px; }
+        @media screen {
+            body.mode-phone { padding: 6px; font-size: 13px; }
+            body.mode-phone .admin-panel { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
+            body.mode-phone .config-box[style*="grid-column"] { grid-column: auto !important; }
+            body.mode-phone textarea { height: 100px; font-size: 14px; }
+            body.mode-phone select, body.mode-phone input[type="date"], body.mode-phone input[type="file"] { font-size: 16px; padding: 10px; }
+            body.mode-phone .btn { padding: 12px; font-size: 13px; }
+            body.mode-phone .btn-kump { flex: 1; }
+            body.mode-phone .hari-chk label { padding: 9px 11px; font-size: 12px; }
+            body.mode-phone .hari-chk input, body.mode-phone table.absen input { width: 20px; height: 20px; }
+            body.mode-phone table.absen { font-size: 12px; }
+            body.mode-phone table.absen td { padding: 7px 3px; }
+            body.mode-phone table.absen td.nm { max-width: 120px; }
+            body.mode-phone .absen-wrap { max-height: 280px; }
+            body.mode-phone .hint-geser { display: block; margin-top: 14px; padding: 8px 12px; text-align: center; font-size: 12px; font-weight: bold; color: #fff; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+            body.mode-phone #kertasWrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 14px; }
+            body.mode-phone #kertas { min-width: 980px; margin-top: 0; }
+            body.mode-phone #loginOverlay { overflow: auto; }
+            body.mode-phone .login-header { font-size: 20px; padding: 0 12px; }
+            body.mode-phone .login-box { width: 88%; max-width: 340px; padding: 24px; box-sizing: border-box; }
+            body.mode-phone .login-box input { font-size: 16px; }
         }
-        @media print { 
+        @media screen and (min-width: 600px) { body.mode-phone .container { max-width: 480px; margin: auto; } }
+                @media print { 
             .admin-panel, .no-print, #loginOverlay { display: none !important; } 
             .container { border: none; box-shadow: none; padding: 0; width: 100%; } 
         }
@@ -168,6 +172,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
+<div class="mod-paparan no-print" title="Pilih bentuk paparan">
+    <button data-mod="auto" onclick="setMod('auto')">🔄 Auto</button>
+    <button data-mod="desktop" onclick="setMod('desktop')">🖥️ Desktop</button>
+    <button data-mod="phone" onclick="setMod('phone')">📱 Phone</button>
+</div>
 
 <div id="loginOverlay">
     <div class="login-header">JADUAL BERTUGAS GURU SERIN</div>
@@ -581,6 +590,24 @@
         }
         input.value = '';
     }
+
+    // ===== PILIHAN BENTUK PAPARAN (Auto / Desktop / Phone) =====
+    function modDisimpan() { try { return localStorage.getItem('modPaparan') || 'auto'; } catch(e) { return 'auto'; } }
+    function terapMod(m) {
+        const kecil = Math.min(screen.width, screen.height) <= 820;
+        const eff = m === 'auto' ? ((kecil || window.innerWidth <= 760) ? 'phone' : 'desktop') : m;
+        document.body.classList.toggle('mode-phone', eff === 'phone');
+        document.body.classList.toggle('mode-desktop', eff === 'desktop');
+        // Pada telefon, mod Desktop memaparkan susun atur penuh (boleh zum); mod lain ikut lebar skrin
+        document.getElementById('vp').setAttribute('content', (m === 'desktop' && kecil) ? 'width=1200' : 'width=device-width, initial-scale=1');
+        document.querySelectorAll('.mod-paparan button').forEach(b => b.classList.toggle('aktif', b.dataset.mod === m));
+    }
+    function setMod(m) {
+        try { localStorage.setItem('modPaparan', m); } catch(e) {}
+        terapMod(m);
+    }
+    window.addEventListener('resize', () => { if(modDisimpan() === 'auto') terapMod('auto'); });
+    terapMod(modDisimpan());
 
     window.onload = () => {
         document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
