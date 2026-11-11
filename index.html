@@ -81,6 +81,7 @@
         table.absen td.nm { text-align:left; max-width:170px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         table.absen tr.ada-absen td { background:#fdecea; }
         .sel-cuti { background:#f2f2f2; font-weight:bold; letter-spacing:3px; color:#777; }
+        .hint-geser { display: none; }
         /* ===== TEMA KACA (skrin sahaja - cetakan/PDF tidak berubah) ===== */
         @media screen {
             body { background: linear-gradient(135deg, #1b2a6b 0%, #3a2a8c 45%, #7b2d8e 100%) fixed; min-height: 100vh; }
@@ -139,7 +140,6 @@
 
         @media screen and (max-width: 760px) {
             body { padding: 6px; font-size: 13px; }
-            #kertas { padding: 12px !important; }
             .admin-panel { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
             .config-box[style*="grid-column"] { grid-column: auto !important; }
             textarea { height: 100px; font-size: 14px; }
@@ -152,20 +152,9 @@
             table.absen td { padding: 7px 3px; }
             table.absen td.nm { max-width: 120px; }
             .absen-wrap { max-height: 280px; }
-            .kepala td:last-child { display: none; }
-            .kepala td:first-child { width: 70px !important; }
-            .kepala div { font-size: 13px !important; }
-            .lencana-img { width: 60px; height: 60px; }
-            .info-bar { flex-wrap: wrap; gap: 6px; }
-            .tandatangan { flex-wrap: wrap; gap: 24px; }
-            table.jadual-main, table.jadual-main tbody, table.jadual-main tr, table.jadual-main td { display: block; width: 100%; box-sizing: border-box; }
-            table.jadual-main { border: none; font-size: 13px; }
-            table.jadual-main thead { display: none; }
-            table.jadual-main tr { border: 2px solid #000; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
-            table.jadual-main td { border: none; border-bottom: 1px solid #ddd; text-align: left; padding: 9px 10px; }
-            table.jadual-main td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; color: #777; font-weight: bold; margin-bottom: 2px; }
-            table.jadual-main td.hari-col { background: var(--primary); color: #fff; text-align: center; font-size: 14px; letter-spacing: 2px; }
-            table.jadual-main td.sel-cuti { text-align: center; }
+            .hint-geser { display: block; margin-top: 14px; padding: 8px 12px; text-align: center; font-size: 12px; font-weight: bold; color: #fff; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+            #kertasWrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 14px; }
+            #kertas { min-width: 980px; margin-top: 0; }
             #loginOverlay { overflow: auto; }
             .login-header { font-size: 20px; padding: 0 12px; }
             .login-box { width: 88%; max-width: 340px; padding: 24px; box-sizing: border-box; }
@@ -246,6 +235,8 @@
             </div>
         </div>
 
+        <div class="hint-geser no-print">↔ Gelongsor jadual ke kiri / kanan untuk melihat semua lajur</div>
+        <div id="kertasWrap">
         <div id="kertas">
         <table class="kepala" style="width: 100%; border: none; margin-bottom: 15px;">
             <tr>
@@ -291,6 +282,7 @@
             <div>Disahkan oleh:<br><br><br><br>____________________<br>(Pentadbir)</div>
         </div>
         </div><!-- /kertas -->
+        </div><!-- /kertasWrap -->
     </div>
 </div>
 
