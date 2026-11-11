@@ -2,6 +2,7 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistem Jadual Guru SMK Seri Rompin</title>
     
     <script type="module">
@@ -70,11 +71,112 @@
         .lencana-img { width: 100px; height: 100px; object-fit: contain; }
         .info-bar { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid black; padding-bottom: 8px; margin-bottom: 10px; font-size: 11px; }
 
+        .hari-chk { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 6px; }
+        .hari-chk label { background:#fdecea; border:1px solid #e6b0aa; border-radius:4px; padding:3px 7px; cursor:pointer; font-weight:bold; font-size:10px; }
+        .hari-chk label:has(input:checked) { background:var(--lock); color:#fff; border-color:var(--lock); }
+        .absen-wrap { max-height:190px; overflow:auto; border:1px solid #ccc; border-radius:4px; margin:5px 0; }
+        table.absen { width:100%; border-collapse:collapse; font-size:10px; }
+        table.absen th { position:sticky; top:0; background:#ecf0f1; padding:3px; border-bottom:1px solid #bbb; }
+        table.absen td { padding:2px 3px; border-bottom:1px solid #eee; text-align:center; }
+        table.absen td.nm { text-align:left; max-width:170px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        table.absen tr.ada-absen td { background:#fdecea; }
+        .sel-cuti { background:#f2f2f2; font-weight:bold; letter-spacing:3px; color:#777; }
+        /* ===== TEMA KACA (skrin sahaja - cetakan/PDF tidak berubah) ===== */
+        @media screen {
+            body { background: linear-gradient(135deg, #1b2a6b 0%, #3a2a8c 45%, #7b2d8e 100%) fixed; min-height: 100vh; }
+            body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(90px); opacity: .5; z-index: -1; pointer-events: none; }
+            body::before { width: 440px; height: 440px; background: #ff6b9d; top: -120px; left: -100px; }
+            body::after { width: 480px; height: 480px; background: #27c5c5; bottom: -140px; right: -120px; }
+
+            .container { background: transparent; border: none; box-shadow: none; padding: 0; }
+            .admin-panel { background: none; border: none; padding: 0; gap: 16px; }
+            .config-box {
+                background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.32); border-radius: 18px; padding: 16px;
+                -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+                box-shadow: 0 8px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.35);
+            }
+            .config-box > strong { font-size: 12px; letter-spacing: .5px; margin-bottom: 6px; text-shadow: 0 1px 3px rgba(0,0,0,.3); }
+            .config-box strong[style*="--lock"] { color: #ffd1cc !important; }
+            .config-box small { color: rgba(255,255,255,.78) !important; }
+            .config-box textarea, .config-box select, .config-box input[type="date"], .config-box input[type="file"] {
+                background: rgba(255,255,255,.88); color: #1f2d3d; border: 1px solid rgba(255,255,255,.55); border-radius: 10px;
+            }
+            .config-box textarea:focus, .config-box select:focus, .config-box input[type="date"]:focus { outline: 2px solid rgba(255,255,255,.8); }
+            .config-box input[type="file"] { background: rgba(255,255,255,.18); color: #fff; border-style: dashed; cursor: pointer; }
+            .config-box input[type="file"]::file-selector-button { background: rgba(255,255,255,.3); color: #fff; border: 1px solid rgba(255,255,255,.5); border-radius: 8px; padding: 6px 12px; margin-right: 10px; cursor: pointer; font-weight: bold; }
+
+            .btn { border: 1px solid rgba(255,255,255,.38); border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,.22); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+            .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+            .btn-kump { background: rgba(255,255,255,.18); }
+            .btn-kump.active { background: rgba(41,128,185,.9); border: 1px solid #fff; transform: scale(1.06); }
+            .btn-save { background: rgba(230,126,34,.82); }
+            .btn-jana { background: linear-gradient(135deg, rgba(39,174,96,.92), rgba(26,188,156,.85)); }
+            .config-box .btn[style*="34495e"] { background: rgba(52,73,94,.78) !important; }
+            .config-box .btn[style*="7f8c8d"] { background: rgba(127,140,141,.6) !important; }
+
+            .hari-chk label { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.38); color: #fff; border-radius: 999px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+            .hari-chk label:has(input:checked) { background: rgba(231,76,60,.78); border-color: rgba(255,255,255,.7); }
+            .hari-chk input, table.absen input { accent-color: #ff6b6b; }
+
+            .absen-wrap { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.28); border-radius: 12px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.4) transparent; }
+            table.absen th { background: rgba(25,30,80,.72); color: #fff; border-bottom: 1px solid rgba(255,255,255,.25); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+            table.absen td { border-bottom: 1px solid rgba(255,255,255,.12); color: #fff; }
+            table.absen tr.ada-absen td { background: rgba(255,99,99,.28); }
+
+            /* Kertas templat: kekal rupa borang asal */
+            #kertas { background: #fff; color: #333; padding: 25px 35px; margin-top: 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,.7); box-shadow: 0 14px 44px rgba(0,0,0,.35); }
+
+            /* Log masuk */
+            #loginOverlay { background-image: linear-gradient(rgba(15,20,60,.55), rgba(15,20,60,.55)), url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?q=80&w=1920'); }
+            .login-box { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.38); color: #fff; -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); box-shadow: 0 16px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.4); }
+            .login-box h2 { color: #fff; border-bottom: 2px solid rgba(255,255,255,.5); }
+            .login-box input { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.45); }
+            .login-box input::placeholder { color: rgba(255,255,255,.75); }
+            .btn-login { background: linear-gradient(135deg, rgba(41,128,185,.92), rgba(142,68,173,.88)); border: 1px solid rgba(255,255,255,.4); }
+            #loginError { color: #ffb3ab !important; }
+            .copyright-tag { color: rgba(255,255,255,.8); }
+        }
+
+        @media screen and (max-width: 760px) {
+            body { padding: 6px; font-size: 13px; }
+            #kertas { padding: 12px !important; }
+            .admin-panel { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
+            .config-box[style*="grid-column"] { grid-column: auto !important; }
+            textarea { height: 100px; font-size: 14px; }
+            select, input[type="date"], input[type="file"] { font-size: 16px; padding: 10px; }
+            .btn { padding: 12px; font-size: 13px; }
+            .btn-kump { flex: 1; }
+            .hari-chk label { padding: 9px 11px; font-size: 12px; }
+            .hari-chk input, table.absen input { width: 20px; height: 20px; }
+            table.absen { font-size: 12px; }
+            table.absen td { padding: 7px 3px; }
+            table.absen td.nm { max-width: 120px; }
+            .absen-wrap { max-height: 280px; }
+            .kepala td:last-child { display: none; }
+            .kepala td:first-child { width: 70px !important; }
+            .kepala div { font-size: 13px !important; }
+            .lencana-img { width: 60px; height: 60px; }
+            .info-bar { flex-wrap: wrap; gap: 6px; }
+            .tandatangan { flex-wrap: wrap; gap: 24px; }
+            table.jadual-main, table.jadual-main tbody, table.jadual-main tr, table.jadual-main td { display: block; width: 100%; box-sizing: border-box; }
+            table.jadual-main { border: none; font-size: 13px; }
+            table.jadual-main thead { display: none; }
+            table.jadual-main tr { border: 2px solid #000; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+            table.jadual-main td { border: none; border-bottom: 1px solid #ddd; text-align: left; padding: 9px 10px; }
+            table.jadual-main td[data-label]::before { content: attr(data-label); display: block; font-size: 10px; color: #777; font-weight: bold; margin-bottom: 2px; }
+            table.jadual-main td.hari-col { background: var(--primary); color: #fff; text-align: center; font-size: 14px; letter-spacing: 2px; }
+            table.jadual-main td.sel-cuti { text-align: center; }
+            #loginOverlay { overflow: auto; }
+            .login-header { font-size: 20px; padding: 0 12px; }
+            .login-box { width: 88%; max-width: 340px; padding: 24px; box-sizing: border-box; }
+            .login-box input { font-size: 16px; }
+        }
         @media print { 
             .admin-panel, .no-print, #loginOverlay { display: none !important; } 
             .container { border: none; box-shadow: none; padding: 0; width: 100%; } 
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -111,19 +213,41 @@
                     <script>for(let i=1; i<=45; i++) document.write(`<option value="${i}">Minggu ${i}</option>`);</script>
                 </select>
                 <input type="date" id="inputDate" onchange="updateInfoPaparan()">
+                <strong style="font-size:10px; color:var(--lock);">Hari TIDAK bersekolah (tick):</strong>
+                <div class="hari-chk">
+                    <label><input type="checkbox" class="chk-cuti" value="ISNIN" onchange="lukisAbsen()"> ISNIN</label>
+                    <label><input type="checkbox" class="chk-cuti" value="SELASA" onchange="lukisAbsen()"> SELASA</label>
+                    <label><input type="checkbox" class="chk-cuti" value="RABU" onchange="lukisAbsen()"> RABU</label>
+                    <label><input type="checkbox" class="chk-cuti" value="KHAMIS" onchange="lukisAbsen()"> KHAMIS</label>
+                    <label><input type="checkbox" class="chk-cuti" value="JUMAAT" onchange="lukisAbsen()"> JUMAAT</label>
+                </div>
                 <button class="btn btn-jana" onclick="janaJadual()">🌀 JANA JADUAL RAWAK</button>
             </div>
             <div class="config-box">
-                <strong>3. Kawalan</strong>
-                <textarea id="inputCuti" placeholder="Pengecualian (Cth: ALI-ISNIN)"></textarea>
-                <div style="display:flex; gap:5px; margin-top:5px;">
+                <strong>3. Guru Tidak Hadir (tick hari)</strong>
+                <div class="absen-wrap">
+                    <table class="absen">
+                        <thead><tr><th style="text-align:left">Nama Guru</th><th title="Isnin">Isn</th><th title="Selasa">Sel</th><th title="Rabu">Rab</th><th title="Khamis">Kha</th><th title="Jumaat">Jum</th></tr></thead>
+                        <tbody id="absenBody"></tbody>
+                    </table>
+                </div>
+                <div style="display:flex; gap:5px;">
                     <button class="btn no-print" style="background:#34495e; flex:1;" onclick="window.focus(); window.print();">🖨️ CETAK</button>
                     <button class="btn no-print" style="background:#7f8c8d; flex:1;" onclick="location.reload()">🔒 LOG KELUAR</button>
                 </div>
             </div>
+            <div class="config-box" style="grid-column: 1 / -1;">
+                <strong>4. Muat Naik Jadual Lama (PDF)</strong>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px;">
+                    <input type="file" id="fileJadualPDF" accept="application/pdf" onchange="muatNaikPDF(this)">
+                    <span id="statusPDF" style="font-weight:bold;"></span>
+                </div>
+                <small style="color:#666; margin-top:4px;">Gunakan PDF yang dijana daripada sistem ini (CETAK &rarr; Save as PDF). Selepas dibaca, jadual akan dipaparkan semula dan boleh diedit terus.</small>
+            </div>
         </div>
 
-        <table style="width: 100%; border: none; margin-bottom: 15px;">
+        <div id="kertas">
+        <table class="kepala" style="width: 100%; border: none; margin-bottom: 15px;">
             <tr>
                 <td style="width:110px;">
                     <img src="https://lh3.googleusercontent.com/d/1FpKKkTjOGWX2WY-czY2e-od1SkaEje3I" class="lencana-img">
@@ -162,10 +286,11 @@
             <select id="selectGuruLaporan" style="font-weight:bold; border:1px solid #ccc;"></select>.
         </div>
 
-        <div style="margin-top: 30px; display: flex; justify-content: space-around; text-align: center; font-size: 11px; font-weight: bold;">
+        <div class="tandatangan" style="margin-top: 30px; display: flex; justify-content: space-around; text-align: center; font-size: 11px; font-weight: bold;">
             <div>Disediakan oleh:<br><br><br><br>____________________<br>(Ketua Kumpulan)</div>
             <div>Disahkan oleh:<br><br><br><br>____________________<br>(Pentadbir)</div>
         </div>
+        </div><!-- /kertas -->
     </div>
 </div>
 
@@ -181,6 +306,12 @@
 
     let kumpulanAktif = 'E';
     let unsubListener = null;
+    const HARI = ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
+    const PERANAN = ['GURU PENYAYANG/PINTU PAGAR','KESELAMATAN','PERHIMPUNAN/MATHURAT/YASIN','BUKU LAPORAN','PANTAU PERGERAKKAN TANDAS/KELAS','KAWALAN KELAS/KANTIN','KEBAJIKAN/PELAJAR SAKIT','GURU RELIEF'];
+    const absen = {};            // { "NAMA GURU": ["ISNIN","RABU"] }
+    let senaraiSemasa = [];
+    let laporanTertunda = null;
+    if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     function checkLogin() {
         const u = document.getElementById('username').value;
@@ -224,6 +355,7 @@
                 document.getElementById('inputGuru').value = DATA_AWAL[k] || "";
                 kemaskiniSenaraiPilihan();
             }
+            terapkanLaporan();
         });
     }
 
@@ -259,6 +391,8 @@
             select.appendChild(opt);
         });
         if(senarai.map(n => n.toUpperCase()).includes(currentVal)) select.value = currentVal;
+        senaraiSemasa = senarai;
+        lukisAbsen();
     }
 
     function tukarKumpulan(k) {
@@ -270,31 +404,190 @@
         aktifkanPenyelarasan(k);
     }
 
-    function janaJadual() {
-        const list = document.getElementById('inputGuru').value.split(',').map(s => s.trim()).filter(s => s !== "");
-        const cutiLines = document.getElementById('inputCuti').value.toUpperCase().split('\n').filter(s => s.includes('-'));
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const hariCutiDipilih = () => [...document.querySelectorAll('.chk-cuti:checked')].map(c => c.value);
+    const senaraiGuru = () => document.getElementById('inputGuru').value.split(',').map(s => s.trim()).filter(s => s !== "");
 
-        if(list.length < 8) { alert("Sila isi sekurang-kurangnya 8 nama guru."); return; }
-
-        const hariArr = ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
-        document.getElementById('infoLaporan').style.display = 'block';
-
-        hariArr.forEach((h) => {
-            let tersedia = list.filter(nama => !cutiLines.some(line => {
-                let [cNama, cHari] = line.split('-').map(x => x.trim().toUpperCase());
-                return nama.toUpperCase().includes(cNama) && h === cHari;
-            }));
-            let shf = tersedia.sort(() => 0.5 - Math.random());
-            tbody.innerHTML += `<tr>
-                <td class="hari-col">${h}</td>
-                <td contenteditable="true">${shf[0]||'-'}</td><td contenteditable="true">${shf[1]||'-'}</td>
-                <td contenteditable="true">${shf[2]||'-'}</td><td contenteditable="true">${shf[3]||'-'}</td>
-                <td contenteditable="true">${shf[4]||'-'}</td><td contenteditable="true">${shf[5]||'-'}</td>
-                <td contenteditable="true">${shf[6]||'-'}</td><td contenteditable="true">${shf[7]||'-'}</td>
-            </tr>`;
+    // Jadual tick guru tidak hadir
+    function lukisAbsen() {
+        const cuti = hariCutiDipilih();
+        const tb = document.getElementById('absenBody');
+        tb.innerHTML = '';
+        if(!senaraiSemasa.length) { tb.innerHTML = '<tr><td colspan="6" style="padding:8px;color:#888;">Tiada nama guru.</td></tr>'; return; }
+        senaraiSemasa.forEach(nama => {
+            const key = nama.toUpperCase();
+            const tr = document.createElement('tr');
+            const nm = document.createElement('td'); nm.className = 'nm'; nm.textContent = nama; nm.title = nama; tr.appendChild(nm);
+            HARI.forEach(h => {
+                const td = document.createElement('td');
+                const cb = document.createElement('input'); cb.type = 'checkbox';
+                cb.checked = (absen[key] || []).includes(h);
+                cb.disabled = cuti.includes(h);
+                cb.onchange = () => {
+                    const a = new Set(absen[key] || []);
+                    cb.checked ? a.add(h) : a.delete(h);
+                    absen[key] = [...a];
+                    tr.classList.toggle('ada-absen', a.size > 0);
+                };
+                td.appendChild(cb); tr.appendChild(td);
+            });
+            tr.classList.toggle('ada-absen', (absen[key] || []).length > 0);
+            tb.appendChild(tr);
         });
+    }
+
+    function barisJadual(h, arr, cuti) {
+        if(cuti) return `<tr><td class="hari-col">${h}</td><td colspan="8" class="sel-cuti">TIDAK BERSEKOLAH</td></tr>`;
+        let t = '';
+        for(let i = 0; i < 8; i++) t += `<td data-label="${PERANAN[i]}" contenteditable="true">${esc(arr[i] || '-')}</td>`;
+        return `<tr><td class="hari-col">${h}</td>${t}</tr>`;
+    }
+
+    function janaJadual() {
+        const list = senaraiGuru();
+        if(list.length < 8) { alert("Sila isi sekurang-kurangnya 8 nama guru."); return; }
+        const cuti = hariCutiDipilih();
+        if(cuti.length >= 5) { alert("Sekurang-kurangnya satu hari mesti bersekolah."); return; }
+        let html = '', amaran = [];
+        HARI.forEach(h => {
+            if(cuti.includes(h)) { html += barisJadual(h, [], true); return; }
+            const tersedia = list.filter(n => !(absen[n.toUpperCase()] || []).includes(h));
+            if(tersedia.length < 8) amaran.push(`${h} (${tersedia.length} guru)`);
+            html += barisJadual(h, tersedia.sort(() => 0.5 - Math.random()), false);
+        });
+        document.getElementById('tableBody').innerHTML = html;
+        document.getElementById('infoLaporan').style.display = 'block';
+        if(amaran.length) alert('Amaran: guru yang hadir kurang daripada 8 orang pada ' + amaran.join(', ') + '. Ruang kosong ditanda "-".');
+    }
+
+    // ===== MUAT NAIK PDF =====
+    function tafsirJadual(items) {
+        // 1. Kumpul item ke baris (ikut Y) dan gabungkan teks bersebelahan menjadi segmen
+        items.sort((a, b) => b.y - a.y);
+        const lines = [];
+        items.forEach(it => {
+            const l = lines[lines.length - 1];
+            if(l && Math.abs(l.y - it.y) < 2.5) l.items.push(it); else lines.push({ y: it.y, items: [it] });
+        });
+        const segs = [];
+        lines.forEach(l => {
+            l.items.sort((a, b) => a.x - b.x);
+            let cur = null;
+            l.items.forEach(it => {
+                if(cur && it.x - cur.x2 < 4) { cur.t += ' ' + it.t; cur.x2 = it.x + it.w; }
+                else { cur = { t: it.t, x1: it.x, x2: it.x + it.w, y: l.y }; segs.push(cur); }
+            });
+        });
+        segs.forEach(g => g.c = (g.x1 + g.x2) / 2);
+        const teks = segs.map(g => g.t).join(' ');
+
+        // 2. Cari label hari dan bahagikan baris
+        const hariSeg = segs.filter(g => HARI.includes(g.t.toUpperCase())).sort((a, b) => b.y - a.y);
+        if(!hariSeg.length) throw new Error('Jadual tidak dikenal pasti. Gunakan PDF yang dijana daripada sistem ini.');
+        let gaps = []; for(let i = 1; i < hariSeg.length; i++) gaps.push(hariSeg[i-1].y - hariSeg[i].y);
+        const half = (gaps.length ? Math.max(...gaps) : 50) / 2;
+        const bands = hariSeg.map((h, i) => ({
+            hari: h.t.toUpperCase(),
+            top: i === 0 ? h.y + half : (hariSeg[i-1].y + h.y) / 2,
+            bot: i === hariSeg.length - 1 ? h.y - half : (h.y + hariSeg[i+1].y) / 2,
+            segs: []
+        }));
+        segs.forEach(g => {
+            if(hariSeg.includes(g)) return;
+            const b = bands.find(b => g.y <= b.top && g.y > b.bot);
+            if(b) b.segs.push(g);
+        });
+        bands.forEach(b => { b.cuti = b.segs.some(g => /TIDAK\s*BERSEKOLAH/i.test(g.t)); });
+
+        // 3. Kenal pasti 8 lajur melalui kedudukan tengah teks
+        const cs = bands.filter(b => !b.cuti).flatMap(b => b.segs.map(g => g.c)).sort((a, b) => a - b);
+        let kol = null;
+        if(cs.length) {
+            for(const th of [20, 14, 28, 40, 10]) {
+                const g = [];
+                cs.forEach(c => { const l = g[g.length-1]; if(l && c - l.last <= th) { l.last = c; l.sum += c; l.n++; } else g.push({ last: c, sum: c, n: 1 }); });
+                if(g.length === 8) { kol = g.map(x => x.sum / x.n); break; }
+            }
+            if(!kol) throw new Error('Struktur 8 lajur tidak dapat dikenal pasti. Gunakan PDF yang dijana daripada sistem ini.');
+        }
+        const rows = bands.map(b => {
+            const sel = Array(8).fill('');
+            if(!b.cuti) {
+                const per = Array.from({ length: 8 }, () => []);
+                b.segs.forEach(g => {
+                    let bi = 0; kol.forEach((k, i) => { if(Math.abs(k - g.c) < Math.abs(kol[bi] - g.c)) bi = i; });
+                    per[bi].push(g);
+                });
+                per.forEach((arr, i) => sel[i] = arr.sort((a, b) => b.y - a.y).map(g => g.t).join(' '));
+            }
+            return { hari: b.hari, cuti: b.cuti, sel };
+        });
+
+        // 4. Maklumat tajuk
+        const mk = teks.match(/KUMPULAN\s*:\s*([A-E])\b/i), mm = teks.match(/MINGGU\s*:\s*(\d{1,2})/i);
+        const md = teks.match(/(\d{1,2})\s*-\s*(\d{1,2})\s+(JANUARI|FEBRUARI|MAC|APRIL|MEI|JUN|JULAI|OGOS|SEPTEMBER|OKTOBER|NOVEMBER|DISEMBER)\s+(\d{4})/i);
+        const ml = teks.match(/ialah\s+(.+?)\s*\.?\s*Disediakan/i);
+        const meta = { kump: mk ? mk[1].toUpperCase() : null, minggu: mm ? parseInt(mm[1]) : null, tarikh: null, laporan: null };
+        if(md) {
+            const bln = ["JANUARI","FEBRUARI","MAC","APRIL","MEI","JUN","JULAI","OGOS","SEPTEMBER","OKTOBER","NOVEMBER","DISEMBER"].indexOf(md[3].toUpperCase());
+            let m = bln, y = parseInt(md[4]);
+            if(parseInt(md[1]) > parseInt(md[2])) { m--; if(m < 0) { m = 11; y--; } }
+            meta.tarikh = `${y}-${String(m + 1).padStart(2, '0')}-${String(parseInt(md[1])).padStart(2, '0')}`;
+        }
+        if(ml && !/^-|SILA PILIH/i.test(ml[1].trim())) meta.laporan = ml[1].trim();
+        return { rows, meta };
+    }
+
+    function terapkanLaporan() {
+        if(!laporanTertunda) return;
+        const sel = document.getElementById('selectGuruLaporan');
+        const v = laporanTertunda.toUpperCase();
+        if(![...sel.options].some(o => o.value === v)) { const o = document.createElement('option'); o.value = v; o.innerText = v; sel.appendChild(o); }
+        sel.value = v;
+        laporanTertunda = null;
+    }
+
+    function terapkanJadual(h) {
+        const m = h.meta;
+        const tukar = m.kump && m.kump !== kumpulanAktif;
+        laporanTertunda = m.laporan;
+        if(tukar) tukarKumpulan(m.kump);
+        if(m.minggu >= 1 && m.minggu <= 45) document.getElementById('selectMinggu').value = m.minggu;
+        if(m.tarikh) document.getElementById('inputDate').value = m.tarikh;
+        updateInfoPaparan();
+        document.querySelectorAll('.chk-cuti').forEach(c => c.checked = h.rows.some(r => r.hari === c.value && r.cuti));
+        lukisAbsen();
+        document.getElementById('tableBody').innerHTML = HARI.map(d => {
+            const r = h.rows.find(x => x.hari === d);
+            return r ? barisJadual(d, r.sel, r.cuti) : barisJadual(d, [], false);
+        }).join('');
+        document.getElementById('infoLaporan').style.display = 'block';
+        if(!tukar) terapkanLaporan();
+    }
+
+    async function muatNaikPDF(input) {
+        const file = input.files[0];
+        const st = document.getElementById('statusPDF');
+        if(!file) return;
+        st.style.color = '#fff'; st.textContent = 'Sedang membaca PDF...';
+        try {
+            if(typeof pdfjsLib === 'undefined') throw new Error('Pustaka PDF gagal dimuatkan. Semak sambungan internet.');
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+            const items = [];
+            for(let p = 1; p <= pdf.numPages; p++) {
+                const tc = await (await pdf.getPage(p)).getTextContent();
+                tc.items.forEach(it => { if(it.str.trim()) items.push({ t: it.str.trim(), x: it.transform[4], y: it.transform[5] - (p - 1) * 5000, w: it.width }); });
+            }
+            if(!items.length) throw new Error('Tiada teks dalam PDF (mungkin imbasan/gambar). Gunakan PDF yang dijana daripada sistem ini.');
+            terapkanJadual(tafsirJadual(items));
+            st.style.color = '#9af0b8';
+            st.textContent = '✔ Jadual berjaya dimuat naik. Sila semak, edit atau jana semula bahagian yang perlu.';
+        } catch(e) {
+            console.error(e);
+            st.style.color = '#ffb3ab'; st.textContent = '✖ ' + e.message;
+        }
+        input.value = '';
     }
 
     window.onload = () => {
