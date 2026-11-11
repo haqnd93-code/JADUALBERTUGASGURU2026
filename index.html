@@ -82,6 +82,12 @@
         table.absen tr.ada-absen td { background:#fdecea; }
         .sel-cuti { background:#f2f2f2; font-weight:bold; letter-spacing:3px; color:#777; }
         .hint-geser { display: none; }
+        .langkah-jana { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 4px 2px; }
+        .langkah-jana .langkah-teks { font-size: 12px; font-weight: bold; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.35); flex: 1; min-width: 200px; }
+        .kumpulan-aksi { display: flex; gap: 8px; flex-wrap: wrap; align-items: stretch; }
+        .btn-cetak { background: #34495e; padding: 14px 20px; font-size: 13px; }
+        .btn-keluar { background: #7f8c8d; padding: 14px 20px; font-size: 13px; }
+        .langkah-jana .btn-jana { width: auto; margin-top: 0; padding: 14px 30px; font-size: 14px; flex: 0 0 auto; }
         .mod-paparan { position: fixed; right: 12px; bottom: 12px; z-index: 1100; display: flex; gap: 2px; padding: 4px; background: rgba(20,25,70,.6); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
         .mod-paparan button { border: none; background: transparent; color: #fff; padding: 8px 12px; border-radius: 999px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .mod-paparan button.aktif { background: rgba(255,255,255,.32); }
@@ -115,6 +121,8 @@
             .btn-kump.active { background: rgba(41,128,185,.9); border: 1px solid #fff; transform: scale(1.06); }
             .btn-save { background: rgba(230,126,34,.82); }
             .btn-jana { background: linear-gradient(135deg, rgba(39,174,96,.92), rgba(26,188,156,.85)); }
+            .btn-cetak { background: rgba(52,73,94,.78); }
+            .btn-keluar { background: rgba(127,140,141,.6); }
             .config-box .btn[style*="34495e"] { background: rgba(52,73,94,.78) !important; }
             .config-box .btn[style*="7f8c8d"] { background: rgba(127,140,141,.6) !important; }
 
@@ -148,6 +156,9 @@
             body.mode-phone textarea { height: 100px; font-size: 14px; }
             body.mode-phone select, body.mode-phone input[type="date"], body.mode-phone input[type="file"] { font-size: 16px; padding: 10px; }
             body.mode-phone .btn { padding: 12px; font-size: 13px; }
+            body.mode-phone .langkah-jana { flex-direction: column; align-items: stretch; text-align: center; gap: 8px; }
+            body.mode-phone .langkah-jana .btn-jana { flex: 1 1 100%; padding: 16px; font-size: 15px; }
+            body.mode-phone .kumpulan-aksi .btn-cetak, body.mode-phone .kumpulan-aksi .btn-keluar { flex: 1; padding: 13px 8px; }
             body.mode-phone .btn-kump { flex: 1; }
             body.mode-phone .hari-chk label { padding: 9px 11px; font-size: 12px; }
             body.mode-phone .hari-chk input, body.mode-phone table.absen input { width: 20px; height: 20px; }
@@ -219,7 +230,6 @@
                     <label><input type="checkbox" class="chk-cuti" value="KHAMIS" onchange="lukisAbsen()"> KHAMIS</label>
                     <label><input type="checkbox" class="chk-cuti" value="JUMAAT" onchange="lukisAbsen()"> JUMAAT</label>
                 </div>
-                <button class="btn btn-jana" onclick="janaJadual()">🌀 JANA JADUAL RAWAK</button>
             </div>
             <div class="config-box">
                 <strong>3. Guru Tidak Hadir (tick hari)</strong>
@@ -229,9 +239,13 @@
                         <tbody id="absenBody"></tbody>
                     </table>
                 </div>
-                <div style="display:flex; gap:5px;">
-                    <button class="btn no-print" style="background:#34495e; flex:1;" onclick="window.focus(); window.print();">🖨️ CETAK</button>
-                    <button class="btn no-print" style="background:#7f8c8d; flex:1;" onclick="location.reload()">🔒 LOG KELUAR</button>
+            </div>
+            <div class="langkah-jana" style="grid-column: 1 / -1;">
+                <span class="langkah-teks">✅ Tetapan nama guru, hari tidak bersekolah &amp; guru tidak hadir sudah siap?</span>
+                <div class="kumpulan-aksi">
+                    <button class="btn btn-jana" onclick="janaJadual()">🌀 JANA JADUAL RAWAK</button>
+                    <button class="btn btn-cetak no-print" onclick="window.focus(); window.print();">🖨️ CETAK</button>
+                    <button class="btn btn-keluar no-print" onclick="location.reload()">🔒 LOG KELUAR</button>
                 </div>
             </div>
             <div class="config-box" style="grid-column: 1 / -1;">
